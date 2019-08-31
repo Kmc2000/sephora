@@ -52,7 +52,7 @@ obj/item/material_scanner/attackby(obj/item/I, mob/user, params)
 		var/obj/item/I = A
 		scanned_materials = I.custom_materials
 	else
-		scanned_materials = custom_materials
+		scanned_materials = A.custom_materials
 	if(scanned_materials?.len)
 		send_scan_message(user, A, scanned_materials)
 	else

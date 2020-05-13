@@ -54,6 +54,7 @@ import { PowerMonitor } from './interfaces/PowerMonitor';
 import { Radio } from './interfaces/Radio';
 import { RapidPipeDispenser } from './interfaces/RapidPipeDispenser';
 import { GulagItemReclaimer } from './interfaces/GulagItemReclaimer';
+import { Seegson } from './interfaces/Seegson';
 import { ShuttleManipulator } from './interfaces/ShuttleManipulator';
 import { SmartVend } from './interfaces/SmartVend';
 import { Smes } from './interfaces/Smes';
@@ -311,6 +312,10 @@ const ROUTES = {
   },
   shuttle_manipulator: {
     component: () => ShuttleManipulator,
+    scrollable: true,
+  },
+  seegson: {
+    component: () => Seegson,
     scrollable: true,
   },
   smartvend: {

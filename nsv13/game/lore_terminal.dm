@@ -178,6 +178,8 @@ GLOBAL_DATUM_INIT(lore_terminal_controller, /datum/lore_controller, new)
 	var/content = null //You may choose to set this here, or via a .txt. file if it's long. Newlines / Enters will break it!
 	var/path = null //The location at which we're stored. If you don't have this, you don't get content
 	var/access_tag = "placeholder" //Set this to match the terminals that you want to be able to access it. EG "ntcommon" for declassified shit.
+	var/category = "Manuals"
+	var/author = "Central Archive"
 
 /datum/lore_entry/New()
 	. = ..()
@@ -205,6 +207,7 @@ SPECIAL KEYS RESPOND AS FOLLOWS:
 	name = "ragnarok_class.ntdoc"
 	title = "Ragnarok Class Specifications"
 	path = "nsv13/lore_entries/ragnarok.txt"
+	category = "History"
 
 /datum/lore_entry/nt/firing_proceedure
 	name = "firing_proceedure.ntdoc"

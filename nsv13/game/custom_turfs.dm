@@ -447,6 +447,15 @@
 /obj/effect/turf_decal/ship/outline
 	icon_state = "outline"
 
+/obj/effect/turf_decal/ship/borderfloor/gunmetal
+	name = "border decal"
+	icon = 'nsv13/icons/turf/decals.dmi'
+	icon_state = "borderfloor_white"
+	color = "#61666A" //Curse you baystation
+
+/obj/effect/turf_decal/ship/borderfloor/gunmetal/corner
+	icon_state = "borderfloorcorner_white"
+
 /obj/effect/turf_decal/ship/borderfloor
 	name = "border decal"
 	icon = 'nsv13/icons/turf/decals.dmi'

@@ -27,14 +27,14 @@
 				break
 	if(I.use_tool(src, user, 0.5 SECONDS, volume=50))
 		user.visible_message("[user] flips [hatch_open ? "closed" : "open"] [src]'s maintenance hatch.",
-			"<span class='notice'>Flip [hatch_open ? "closed" : "open"] [src]'s maintenance hatch.</span>")
+			"<span class='notice'>you flip [hatch_open ? "closed" : "open"] [src]'s maintenance hatch.</span>")
 		hatch_open = !hatch_open
 		update_icon()
 	return TRUE
 
 /obj/structure/lattice/catwalk/ship/update_icon()
 	. = ..()
-	if(!hatch_open)
+	if(hatch_open)
 		icon_state = "catwalk_hatch_open"
 		obj_flags &= ~BLOCK_Z_FALL //Minecraft trap door.
 		smooth = SMOOTH_FALSE

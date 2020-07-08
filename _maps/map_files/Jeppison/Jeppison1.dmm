@@ -1448,19 +1448,13 @@
 /turf/open/floor/plating,
 /area/security/warden)
 "dA" = (
-/obj/structure/cable{
-	icon_state = "0-4"
-	},
-/obj/machinery/power/deck_relay{
-	pixel_y = -32
-	},
 /obj/machinery/atmospherics/pipe/simple/multiz,
 /turf/open/floor/carpet/black,
 /area/ai_monitored/turret_protected/aisat/foyer)
 "dB" = (
 /obj/machinery/light/small,
 /obj/structure/cable{
-	icon_state = "1-8"
+	icon_state = "1-2"
 	},
 /turf/open/floor/carpet/black,
 /area/ai_monitored/turret_protected/aisat/foyer)
@@ -1693,10 +1687,9 @@
 /area/tcommsat/server)
 "ef" = (
 /obj/structure/ladder,
-/obj/machinery/power/deck_relay{
-	pixel_y = -32
+/obj/structure/cable{
+	icon_state = "1-2"
 	},
-/obj/structure/cable,
 /turf/open/floor/plating,
 /area/tcommsat/computer)
 "eg" = (
@@ -5968,12 +5961,11 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/obj/machinery/power/deck_relay{
-	pixel_y = -32
-	},
-/obj/structure/cable,
 /obj/machinery/light,
 /obj/item/twohanded/required/kirbyplants/random,
+/obj/structure/cable{
+	icon_state = "1-2"
+	},
 /turf/open/floor/carpet/blue,
 /area/hallway/nsv/stairwell/upper)
 "mX" = (
@@ -12389,6 +12381,11 @@
 	},
 /turf/open/floor/plasteel/dark,
 /area/chapel/main)
+"CJ" = (
+/obj/structure/cable,
+/obj/machinery/power/deck_relay,
+/turf/closed/wall/ship,
+/area/hallway/nsv/stairwell/upper)
 "CM" = (
 /obj/machinery/computer/ship/viewscreen,
 /obj/machinery/atmospherics/pipe/manifold/scrubbers/hidden/layer3{
@@ -12801,6 +12798,11 @@
 /obj/item/nullrod,
 /turf/open/floor/plasteel/dark,
 /area/chapel/main)
+"Iq" = (
+/obj/machinery/power/deck_relay,
+/obj/structure/cable,
+/turf/closed/wall/r_wall/ship,
+/area/tcommsat/computer)
 "ID" = (
 /obj/machinery/atmospherics/pipe/simple/supply/hidden/layer1,
 /obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer3,
@@ -13340,6 +13342,11 @@
 	},
 /turf/open/floor/plasteel/dark,
 /area/security/prison)
+"Rj" = (
+/obj/machinery/power/deck_relay,
+/obj/structure/cable,
+/turf/closed/wall/r_wall/ship,
+/area/ai_monitored/turret_protected/ai_upload)
 "Rp" = (
 /obj/structure/table/wood,
 /obj/item/reagent_containers/food/drinks/bottle/holywater{
@@ -39652,7 +39659,7 @@ dg
 dv
 rI
 ef
-dg
+Iq
 IG
 aa
 aa
@@ -41150,7 +41157,7 @@ cO
 pZ
 GR
 dB
-ai
+Rj
 ai
 ai
 ai
@@ -57461,7 +57468,7 @@ mK
 nH
 mT
 mW
-fr
+CJ
 nA
 Gv
 pN

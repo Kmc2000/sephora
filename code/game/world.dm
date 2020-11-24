@@ -274,6 +274,11 @@ GLOBAL_VAR(restart_counter)
 		GM.__gasmixture_unregister()
 		num_deleted++
 	log_world("Deallocated [num_deleted] gas mixtures")
+	num_deleted = 0
+	for(var/datum/vector2d/v)
+		v.vector_unregister()
+		num_deleted++
+	log_world("Deallocated [num_deleted] vectors")
 	if(fexists(EXTOOLS))
 		call(EXTOOLS, "cleanup")()
 	..()

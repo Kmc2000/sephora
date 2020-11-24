@@ -8,7 +8,8 @@ Special thanks to qwertyquerty for explaining and dictating all this! (I've most
 
 /proc/is_separating_axis(datum/vector2d/a_pos, datum/vector2d/b_pos, list/datum/vector2d/a_points, list/datum/vector2d/b_points, datum/vector2d/axis, datum/collision_response/c_response)
 	var/datum/vector2d/offset_v = b_pos - a_pos
-
+	if(!axis)
+		message_admins("!!AXIS")
 	var/projected_offset = offset_v.dot(axis)
 
 	var/datum/vector2d/range_a = flatten_points_on(a_points, axis)

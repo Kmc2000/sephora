@@ -168,7 +168,8 @@ Methods for projecting a vector onto another
 */
 /datum/vector2d/proc/project(var/datum/vector2d/other)
 	RETURN_TYPE(/datum/vector2d)
-	var/amt = src.dot(other) / other.ln2()
+	other.divide(other.ln2())
+	var/amt = src.dot(other)
 	src.x = amt * other.x
 	src.y = amt * other.y
 	return src

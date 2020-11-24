@@ -33,8 +33,8 @@ Method to set our position to a new one.
 */
 
 /datum/shape/proc/_set(_x, _y)
-	position.x = _x
-	position.y = _y
+	position.set_x(_x)
+	position.set_y(_y)
 
 /*
 Method to set our points to a new list of points
@@ -69,9 +69,10 @@ Method to recalculate our bounding box, adjusting the relative positions accordi
 
 /datum/shape/proc/_recalc()
 	for(var/i in 1 to src.base_points.len)
-		var/datum/vector2d/rel_point = src.base_points[i].clone()
+		var/datum/vector2d/rel_point = src.rel_points[i]
+		rel_point.copy(src.base_points[i])
 		rel_point.rotate(src._angle)
-		src.rel_points[i].copy(rel_point)
+		src.rel_points[i] = rel_point
 
 	//Clear out our current AABB collision box
 	src.aabb.Cut()
@@ -89,9 +90,9 @@ Method to recalculate our bounding box, adjusting the relative positions accordi
 		if(p1.x > max_x) max_x = p1.x
 		if(p1.y > max_y) max_y = p1.y
 
-		var/datum/vector2d/edge = p2 - p1
+		p2.subtract(p1)
 
-		src.normals[i].copy(edge.perp().normalize())
+		src.normals[i].copy(p2.perp().normalize())
 
 	aabb.Add(min_x)
 	aabb.Add(min_y)
@@ -169,6 +170,9 @@ Find the average collision point between two shapes. Usually ends up being prett
 	// BYOND WHHHY CAN'T WE HAVE /=
 	closest_point.x = closest_point.x / collision_points.len
 	closest_point.y = closest_point.y / collision_points.len
+	//Free up the refs
+	for(var/datum/vector2d/point in collision_points)
+		qdel(point)
 
 	return closest_point
 

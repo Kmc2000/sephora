@@ -9,6 +9,74 @@ PROCESSING_SUBSYSTEM_DEF(physics_processing)
 	var/list/physics_levels = list()
 	var/next_boarding_time = 0 //This is stupid and lazy but it's 5am and I don't care anymore
 
+/datum/controller/subsystem/processing/physics_processing/proc/flatten_points_on(list/points, datum/vector2d/normal)
+	var/minpoint = INFINITY
+	var/maxpoint = -INFINITY
+
+
+	for (var/datum/vector2d/point in points)
+		var/dot = point.dot(normal)
+		if (dot < minpoint)
+			minpoint = dot
+
+		if (dot > maxpoint)
+			maxpoint = dot
+	return new /datum/vector2d(minpoint, maxpoint)
+
+/**
+
+Helper methods for collision detection, implementing things like the separating axis theorem.
+
+Special thanks to qwertyquerty for explaining and dictating all this! (I've mostly translated his pseudocode into readable byond code)
+
+*/
+
+/datum/controller/subsystem/processing/physics_processing/proc/is_separating_axis(datum/vector2d/a_pos, datum/vector2d/b_pos, list/datum/vector2d/a_points, list/datum/vector2d/b_points, datum/vector2d/axis, datum/collision_response/c_response)
+
+	b_pos.subtract(a_pos)
+
+	var/projected_offset = b_pos.dot(axis)
+	var/datum/vector2d/range_a = flatten_points_on(a_points, axis)
+	var/datum/vector2d/range_b = flatten_points_on(b_points, axis)
+
+	range_b.update(range_b.x+projected_offset,range_b.y+projected_offset)
+
+	if(range_a.x > range_b.y || range_b.x > range_a.y)
+		return TRUE
+	if (c_response)
+		var/overlap = 0
+
+		if(range_a.x < range_b.x)
+			c_response.a_in_b = FALSE
+
+			if(range_a.y < range_b.y)
+				overlap = range_a.y - range_b.x
+				c_response.b_in_a = FALSE
+			else
+				var/option_1 = range_a.y - range_b.x
+				var/option_2 = range_b.y - range_a.x
+				overlap = option_1 < option_2 ? option_1 : -option_2
+		else
+			c_response.b_in_a = FALSE
+
+			if (range_a.y > range_b.y)
+				overlap = range_a.x - range_b.y
+				c_response.a_in_b = FALSE
+			else
+				var/option_1 = range_a.y - range_b.x
+				var/option_2 = range_b.y - range_a.x
+				overlap = option_1 < option_2 ? option_1 : -option_2
+
+		if (abs(overlap) < c_response.overlap)
+			c_response.overlap = abs(overlap)
+			c_response.overlap_normal.copy(axis)
+			if (overlap < 0)
+				c_response.overlap_normal.reverse()
+	//Free the vectors
+	qdel(range_a)
+	qdel(range_b)
+	return FALSE
+
 /datum/controller/subsystem/processing/physics_processing/fire(resumed)
 	. = ..()
 	//This is O(n), but it could be worse, far worse.
@@ -46,16 +114,25 @@ PROCESSING_SUBSYSTEM_DEF(physics_processing)
 					continue
 				//OK, now we get into the expensive calculation. This is our absolute last resort because it's REALLY expensive.
 				if(isovermap(body.holder) && isovermap(neighbour.holder)) //Dirty, but necessary. I want to minimize in-depth collision calc wherever I possibly can, so only overmap prototypes use it.
-					var/datum/collision_response/c_response = new /datum/collision_response()
-					if(body.collider2d?.collides(neighbour.collider2d, c_response))
-						body.holder.Bump(neighbour.holder, c_response) //More in depth calculation required, so pass this information on.
+					var/datum/collision_response/outcome = null
+					outcome = body.collider2d?.collides(neighbour.collider2d)
+					if(outcome)
+						message_admins("OM Collision response was: [outcome]")
+						body.holder.Bump(neighbour.holder, outcome) //More in depth calculation required, so pass this information on.
 						recent_collisions += neighbour
+						qdel(outcome)
 				else //OK great, we get more simplified calc!
 					if(isprojectile(body) && isprojectile(neighbour))
 						continue //Bullets don't want to "bump" into each other, we actually handle that code in "crossed()"
-					if(body.collider2d?.collides(neighbour.collider2d))
+					var/datum/collision_response/outcome = null
+					outcome = body.collider2d?.collides(neighbour.collider2d)
+					if(outcome)
+						message_admins("Collision response was: [outcome]")
 						body.holder.Bump(neighbour.holder)
 						recent_collisions += neighbour
+						qdel(outcome)
+
+
 
 /datum/component/physics2d
 	var/datum/shape/collider2d = null //Our box collider. See the collision module for explanation
@@ -87,9 +164,9 @@ PROCESSING_SUBSYSTEM_DEF(physics_processing)
 		var/list/za_warudo = SSphysics_processing.physics_levels[I]
 		za_warudo.Remove(src)
 	//De-alloc references.
-	collider2d = null
-	position = null
-	velocity = null
+	qdel(collider2d)
+	qdel(position)
+	qdel(velocity)
 	. = ..()
 
 /datum/component/physics2d/proc/setup(list/hitbox, angle)

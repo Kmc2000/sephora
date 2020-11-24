@@ -45,9 +45,17 @@ Bullet reactions
 	else
 		playsound(src, P.hitsound, 50, 1)
 		visible_message("<span class='danger'>[src] is hit by \a [P]!</span>", null, null, COMBAT_MESSAGE_RANGE)
+
 		if(!QDELETED(src)) //Bullet on_hit effect might have already destroyed this object
-			var/datum/vector2d/point_of_collision = src.physics2d?.collider2d.get_collision_point(P.physics2d?.collider2d)//Get the collision point, see if the armour quadrants need to absorb this hit.
-			take_quadrant_hit(run_obj_armor(P.damage, P.damage_type, P.flag, null, P.armour_penetration), check_quadrant(point_of_collision)) //This looks horrible, but trust me, it isn't! Probably!. Armour_quadrant.dm for more info
+			var/datum/vector2d/point_of_collision = src.physics2d.collider2d.get_collision_point(P.physics2d.collider2d)//Get the collision point, see if the armour quadrants need to absorb this hit.
+			//message_admins("Point of collision: [point_of_collision] quadrant: [check_quadrant(point_of_collision)]")
+			var/quadrant = null
+			if(point_of_collision)
+				quadrant = check_quadrant(point_of_collision)
+			else //Fallback. Pick a random quadrant.
+				quadrant = pick(ARMOUR_FORWARD_PORT, ARMOUR_FORWARD_STARBOARD, ARMOUR_AFT_PORT, ARMOUR_AFT_STARBOARD)
+			if(quadrant != null)
+				take_quadrant_hit(run_obj_armor(P.damage, P.damage_type, P.flag, null, P.armour_penetration), quadrant) //This looks horrible, but trust me, it isn't! Probably!. Armour_quadrant.dm for more info
 
 /obj/structure/overmap/proc/relay_damage(proj_type)
 	if(!occupying_levels.len)

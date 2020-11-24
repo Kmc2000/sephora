@@ -4,11 +4,11 @@
 //Thank you once again to qwerty for writing the directional calc for this.
 /obj/structure/overmap/proc/check_quadrant(datum/vector2d/point_of_collision)
 	if(!point_of_collision)
-		return
-	var/datum/vector2d/diff = point_of_collision - position
-	diff.x /= 32 //Scale it down so that the math isn't off.
-	diff.y /= 32
-	var/shield_angle_hit = SIMPLIFY_DEGREES(diff.angle() - angle)
+		return null
+	point_of_collision.subtract(position)
+	point_of_collision.divide(32)
+	var/shield_angle_hit = SIMPLIFY_DEGREES(point_of_collision.angle() - angle)
+	qdel(point_of_collision)
 	switch(shield_angle_hit)
 		if(0 to 89) //0 - 90 deg is the first right quarter of the circle, it's like dividing up a pizza!
 			return ARMOUR_FORWARD_PORT
@@ -18,6 +18,7 @@
 			return ARMOUR_AFT_STARBOARD
 		if(270 to 360) //Then this represents the last quadrant of the circle, the northwest one
 			return ARMOUR_FORWARD_STARBOARD
+	return ARMOUR_FORWARD_PORT
 
 /* UNUSED
 /obj/screen/alert/overmap_integrity

@@ -143,7 +143,7 @@
 	var/flak_battery_amount = 1
 
 	var/role = NORMAL_OVERMAP
-	
+
 	var/list/missions = list()
 
 /**
@@ -312,12 +312,6 @@ Proc to spool up a new Z-level for a player ship and assign it a treadmill.
 		weapon_types[FIRE_MODE_MAC] = new /datum/ship_weapon/mac(src)
 	if(ai_controlled)
 		weapon_types[FIRE_MODE_MISSILE] = new/datum/ship_weapon/missile_launcher(src)
-
-/obj/item/projectile/Destroy()
-	if(physics2d)
-		qdel(physics2d)
-		physics2d = null
-	. = ..()
 
 /obj/structure/overmap/Destroy()
 	SEND_SIGNAL(src,COMSIG_SHIP_KILLED)
